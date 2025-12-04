@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">Novo Problema</div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-primary w-100">Registrar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <h3 class="mb-3">Meus Chamados</h3>
+        {% for problema in problemas %}
+            <div class="card mb-3 border-start border-4 {% if problema.status == 'CONCLUIDO' %}border-success{% else %}border-warning{% endif %}">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">{{ problema.modelo_carro }} - {{ problema.titulo }}</h5>
+                        <span class="badge {% if problema.status == 'ABERTO' %}bg-danger{% elif problema.status == 'ANDAMENTO' %}bg-warning{% else %}bg-success{% endif %}">
+                            {{ problema.get_status_display }}
+                        </span>
+                    </div>
+                    
+                    <p class="card-text mt-3">{{ problema.descricao }}</p>
+
+                    {% if problema.imagem %}
+                        <div class="mb-3">
+                            <img src="{{ problema.imagem.url }}" class="img-fluid rounded" style="max-height: 200px;" alt="Foto do problema">
+                        </div>
+                    {% endif %}
+
+                    <hr>
+                    
+                    {% if problema.oficina %}
+                        <div class="alert alert-info py-2 mb-0">
+                            <strong>Oficina Responsável:</strong> {{ problema.oficina.perfil_oficina.nome_oficina }}
+                            <br><small>{{ problema.oficina.perfil_oficina.endereco }}</small>
+                        </div>
+                    {% else %}
+                        <div class="text-muted small">
+                            <i class="bi bi-clock"></i> Aguardando uma oficina aceitar o serviço...
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% empty %}
+            <div class="alert alert-secondary">Nenhum problema registrado ainda.</div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

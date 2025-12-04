@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2 class="mb-4">Painel da Oficina</h2>
+<div class="row">
+    <div class="col-md-6">
+        <h4 class="text-primary border-bottom pb-2">Disponíveis para Pegar</h4>
+        {% for problema in problemas_abertos %}
+            <div class="card mb-4 shadow-sm h-100">
+                {% if problema.imagem %}
+                    <div style="height: 200px; overflow: hidden;" class="bg-light d-flex align-items-center justify-content-center">
+                        <img src="{{ problema.imagem.url }}" class="w-100" style="object-fit: cover; height: 100%;" alt="Problema">
+                    </div>
+                {% endif %}
+                
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ problema.modelo_carro }} - {{ problema.titulo }}</h5>
+                    <p class="card-text flex-grow-1">{{ problema.descricao }}</p>
+                    <p class="text-muted small mb-3">Cliente: {{ problema.cliente.username }}</small></p>
+                    
+                    <a href="{% url 'pegar_servico' problema.pk %}" class="btn btn-outline-primary w-100 mt-auto">Pegar Serviço</a>
+                </div>
+            </div>
+        {% empty %}
+            <div class="alert alert-light">Não há novos chamados no momento.</div>
+        {% endfor %}
+    </div>
+
+    <div class="col-md-6">
+        <h4 class="text-success border-bottom pb-2">Meus Serviços em Andamento</h4>
+        {% for servico in meus_servicos %}
+            <div class="card mb-3 border-success">
+                <div class="card-body">
+                    <h5 class="card-title">{{ servico.modelo_carro }} - {{ servico.titulo }}</h5>
+                    
+                    {% if servico.imagem %}
+                         <a href="{{ servico.imagem.url }}" target="_blank" class="btn btn-sm btn-light mb-2 border">Ver Foto Anexada</a>
+                    {% endif %}
+
+                    <p>Status atual: <span class="badge bg-warning text-dark">{{ servico.get_status_display }}</span></p>
+                    
+                    {% if servico.status != 'CONCLUIDO' %}
+                        <a href="{% url 'concluir_servico' servico.pk %}" class="btn btn-success btn-sm w-100">Marcar como Concluído</a>
+                    {% else %}
+                        <div class="alert alert-success py-1 text-center">Finalizado!</div>
+                    {% endif %}
+                </div>
+            </div>
+        {% empty %}
+            <div class="alert alert-light">Você não tem serviços ativos.</div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

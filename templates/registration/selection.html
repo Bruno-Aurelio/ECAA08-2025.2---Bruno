@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6 text-center">
+        <div class="card shadow-sm">
+            <div class="card-body p-5">
+                <h2 class="mb-4">Como você deseja se cadastrar?</h2>
+                <p class="text-muted mb-4">Escolha o tipo de conta que melhor se adapta a você.</p>
+                
+                <div class="d-grid gap-3">
+                    <a href="{% url 'signup_cliente' %}" class="btn btn-primary btn-lg p-3">
+                        <i class="bi bi-person-fill"></i> Sou Cliente
+                        <div class="small fw-normal">Tenho um problema no meu carro</div>
+                    </a>
+                    
+                    <a href="{% url 'signup_oficina' %}" class="btn btn-dark btn-lg p-3">
+                        <i class="bi bi-tools"></i> Sou Oficina
+                        <div class="small fw-normal">Quero prestar serviços</div>
+                    </a>
+                </div>
+
+                <div class="mt-4 pt-3 border-top">
+                    <small>Já tem uma conta? <a href="{% url 'login' %}">Fazer Login</a></small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
